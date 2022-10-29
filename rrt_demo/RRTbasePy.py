@@ -49,7 +49,7 @@ class RRTMap:
 
 
 class RRTGraph:
-    def __init__(self,start,goal,MapDimensions,obsdim,obsnum):
+    def __init__(self,start,goal,MapDimensions,obsdim,obsnum,radius):
         (x,y) = start
         self.start = start
         self.goal = goal
@@ -58,6 +58,7 @@ class RRTGraph:
         self.x = []
         self.y = []
         self.parent = []
+        self.costs = []
 
         self.x.append(x)
         self.y.append(y)
@@ -68,6 +69,8 @@ class RRTGraph:
 
         self.goalstate = None
         self.path = []
+
+        self.radius=radius
 
     def makeRandomRect(self):
         uppercornerx = int(random.uniform(0,self.mapw-self.obsDim))
@@ -101,9 +104,11 @@ class RRTGraph:
 
     def add_edge(self,parent,child):
         self.parent.insert(child,parent)
+        self.costs.insert(child, self.cost(child))
 
     def remove_edge(self,n):
         self.parent.pop(n)
+        self.costs.pop(n)
 
     def number_of_nodes(self):
         return len(self.x)
@@ -174,7 +179,7 @@ class RRTGraph:
             (x,y) = (int(xnear + dmax*math.cos(theta)),
                     int(ynear + dmax*math.sin(theta)))
             self.remove_node(nrand)
-            if (abs(x-self.goal[0]) < dmax) and (abs(y-self.goal[1]) < dmax):
+            if (abs(x-self.goal[0]) <= dmax) and (abs(y-self.goal[1]) <= dmax):
                 self.add_node(nrand,self.goal[0],self.goal[1])
                 self.goalstate=nrand
                 self.goalFlag=True
@@ -199,24 +204,80 @@ class RRTGraph:
             pathCoords.append((x,y))
         return pathCoords
 
-    def expand(self):
+    def expand(self,type):
         n=self.number_of_nodes()
         x,y=self.sample_envir()
         self.add_node(n,x,y)
         if self.isFree():
             xnearest=self.nearest(n)
             self.step(xnearest,n)
-            self.connect(xnearest,n)
+            
+            if type=='rrt-star':
+                if self.goalFlag:
+                    self.connect(xnearest,n)
+                    return self.x, self.y, self.parent
+                
+                xnearest,neighbors=self.findNeighbor(xnearest, n)
+                if self.connect(xnearest,n):
+                    self.rewire(n,xnearest,neighbors)
+            elif type=='rrt':
+                self.connect(xnearest,n)
         return self.x,self.y,self.parent
 
-    def bias(self,ngoal):
+    def bias(self,ngoal,type):
         n=self.number_of_nodes()
         self.add_node(n,ngoal[0],ngoal[1])
         nnear=self.nearest(n)
         self.step(nnear,n)
-        self.connect(nnear,n)
+        
+        if type=='rrt-star':
+            if self.goalFlag:
+                self.connect(nnear,n)
+                return self.x, self.y, self.parent
+            
+            nnear,neighbors=self.findNeighbor(nnear, n)
+            if self.connect(nnear,n):
+                self.rewire(n,nnear,neighbors)
+        elif type=='rrt':
+            self.connect(nnear, n)
         return self.x,self.y,self.parent
 
-    def cost(self):
-        pass
+    def cost(self, node):
+        n = node
+        tot = 0
+        while n != 0:
+            tot += self.distance(n, self.parent[n])
+            n = self.parent[n]
+        return tot
+
+    def findNeighbor(self, nnear, node):
+        lowestCost = self.cost(nnear) + self.distance(node, nnear)
+        bestNode = nnear
+        neighbors = []
+        for n in range(self.number_of_nodes()):
+            if n == node:
+                continue
+            else:
+                if (self.distance(n, node) <= self.radius) and (self.cost(n) + self.distance(n, node) < lowestCost):
+                    neighbors.append(n)
+                    bestNode = n
+                    lowestCost = self.cost(n)
+                elif (self.distance(n, node) <= self.radius):
+                    neighbors.append(n)
+        
+        return bestNode, neighbors
+
+    def rewire(self,node,nearest,neighbors):
+        for n in neighbors:
+            if n == nearest:
+                continue
+            if self.distance(node, n)+self.cost(node) < self.cost(n):
+                (x1,y1) = (self.x[n], self.y[n])
+                (x2,y2) = (self.x[node], self.y[node])
+                if not self.crossObstacle(x1, x2, y1, y2):
+                    self.parent[n] = node
+                    self.costs[n] = self.cost(n)
+
+
+        
     
