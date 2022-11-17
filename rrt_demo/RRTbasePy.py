@@ -47,7 +47,8 @@ class RRTMap:
                 obstacle[3] -= 30
             pygame.draw.rect(self.map, self.Grey, obstacle)
 
-
+# (0,0), (0,500), (600,0) (600,500)
+# (500,400), (200,130)
 class RRTGraph:
     def __init__(self,start,goal,MapDimensions,obsdim,obsnum,radius):
         (x,y) = start
@@ -76,6 +77,23 @@ class RRTGraph:
         uppercornerx = int(random.uniform(0,self.mapw-self.obsDim))
         uppercornery = int(random.uniform(0,self.maph-self.obsDim))
         return (uppercornerx,uppercornery)
+
+
+    def convertobs(self, coordinates):
+        obs = []
+
+        for coords in coordinates:
+            rectang = None
+            startgoalcol = True
+            while startgoalcol:
+                rectang = pygame.Rect(coords,(self.obsDim,self.obsDim))
+                if rectang.collidepoint(self.start) or rectang.collidepoint(self.goal):
+                    startgoalcol = True
+                else:
+                    startgoalcol=False
+            obs.append(rectang)
+        self.obstacles=obs.copy()
+        return obs
 
     def makeobs(self):
         obs = []

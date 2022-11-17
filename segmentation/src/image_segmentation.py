@@ -297,12 +297,82 @@ def kmeans_cluster(image):
     segmented_image = segmented_data.reshape((image.shape)) # reshape data into the original image dimensions
     return segmented_image, centers
 
+def mask_red(image):
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # define range of red color in HSV
+    lower_red = np.array([0,50,50])
+    upper_red = np.array([10,255,255])
+    # Threshold the HSV image to get only red colors
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(im,im, mask= mask)
+    return mask
+
+def mask_green(image):
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # define range of red color in HSV
+    lower_red = np.array([20,50,50])
+    upper_red = np.array([50,255,255])
+    # Threshold the HSV image to get only red colors
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(im,im, mask= mask)
+    return mask
+
+def mask_blue(image):
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # define range of red color in HSV
+    lower_g = np.array([80,50,50])
+    upper_g = np.array([120,255,255])
+    # Threshold the HSV image to get only red colors
+    mask = cv2.inRange(hsv, lower_g, upper_g)
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(im,im, mask= mask)
+    return mask
+
+def drawCenters(ima, mask, label):
+# change it with your absolute path for the image
+    kernel = np.ones((3,3), np.uint8)
+    eroded = cv2.erode(mask, kernel, iterations=1)
+    image = cv2.dilate(eroded, kernel, iterations=5)
+    
+    cv2.imshow("erode+dilate",image)
+    cv2.waitKey()
+    
+     
+    blur = cv2.GaussianBlur(image, (5, 5),
+                           cv2.BORDER_DEFAULT)
+    ret, thresh = cv2.threshold(blur, 200, 255,
+                               cv2.THRESH_BINARY_INV)
+
+    contours, hierarchies = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    coordinate_points = []
+    for i in contours:
+
+        M = cv2.moments(i)
+
+        if M['m00'] != 0:
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
+            coordinate_points.append((cx,cy))
+            cv2.drawContours(ima, [i], -1, (0, 255, 0), 2)
+            cv2.circle(ima, (cx, cy), 7, (0, 0, 255), -1)
+            cv2.putText(ima, label, (cx - 20, cy - 20),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            print(f"x: {cx} y: {cy}")
+
+    return ima, coordinate_points
+    
 
 if __name__ == '__main__':
     # adjust the file names here
     
     test_img = read_image(IMG_DIR + '/frame0000.jpg', grayscale=False)
     im = read_image(IMG_DIR + '/frame0000.jpg')
+    ima = read_image(IMG_DIR + '/frame0000.jpg')
     
    
     # test_img = read_image(IMG_DIR + '/lego.jpg', grayscale=True)
@@ -314,52 +384,23 @@ if __name__ == '__main__':
     # uncomment the test you want to run
     # it will plot the image and also save it
 
-        # Convert BGR to HSV
-    hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
-    # define range of blue color in HSV
-    lower_red = np.array([0,50,50])
-    upper_red = np.array([10,255,255])
-    # Threshold the HSV image to get only blue colors
-    mask = cv2.inRange(hsv, lower_red, upper_red)
-    # Bitwise-AND mask and original image
-    res = cv2.bitwise_and(im,im, mask= mask)
-    cv2.imshow('frame',im)
-    cv2.waitKey()
-    cv2.imshow('mask',mask)
-    cv2.waitKey()
-    cv2.imshow('res',res)
-    cv2.waitKey()    
+    """
+    mask = mask_green(im)
+    ima = drawCenters(ima, mask, 'green')
+    """
+    mask = mask_blue(im)
+    ima, corners = drawCenters(ima, mask, 'blue')
+    print(f"these are the corners: {corners}")
+
+    mask = mask_red(im)
+    ima, waypoints = drawCenters(ima, mask, 'red')
+    print(f"these are the waypoints: {waypoints}")
 
 
-    # change it with your absolute path for the image
-    kernel = np.ones((3,3), np.uint8)
-    eroded = cv2.erode(mask, kernel, iterations=1)
-    cv2.imshow('eroded', eroded)
-    cv2.waitKey()
-    image = cv2.dilate(eroded, kernel, iterations=5)
-    cv2.imshow('dilated', image)
+    cv2.imshow("", ima)
     cv2.waitKey(0)
+
     
-     
-    blur = cv2.GaussianBlur(image, (5, 5),
-                           cv2.BORDER_DEFAULT)
-    ret, thresh = cv2.threshold(blur, 200, 255,
-                               cv2.THRESH_BINARY_INV)
-
-    contours, hierarchies = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    for i in contours:
-        M = cv2.moments(i)
-        if M['m00'] != 0:
-            cx = int(M['m10']/M['m00'])
-            cy = int(M['m01']/M['m00'])
-            cv2.drawContours(im, [i], -1, (0, 255, 0), 2)
-            cv2.circle(im, (cx, cy), 7, (0, 0, 255), -1)
-            cv2.putText(im, "center", (cx - 20, cy - 20),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-            print(f"x: {cx} y: {cy}")
-
-    cv2.imshow('result', im)
-    cv2.waitKey()
 
     """
     kernel = np.ones((3, 3),np.uint8)

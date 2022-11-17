@@ -17,7 +17,8 @@ def main(type):
     map=RRTMap(start,goal,dimensions,obsdim,obsnum)
     graph=RRTGraph(start,goal,dimensions,obsdim,obsnum,radius)
 
-    obstacles=graph.makeobs()
+    #obstacles=graph.makeobs()
+    obstacles = graph.convertobs([(500,400), (200,130)])
     map.drawMap(obstacles)
 
     while (not graph.path_to_goal()):
