@@ -40,6 +40,7 @@ def main(type):
         iteration += 1
     
     map.drawPath(graph.getPathCoords())
+    print(graph.getPathCoords()[::-1])
     #smoothedPath = pathSmooth.B_spline(graph.getPathCoords(), style='waypoint')
     #print(len(smoothedPath), len(graph.getPathCoords()))
     #map=RRTMap(start,goal,dimensions,obsdim,obsnum)
