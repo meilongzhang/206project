@@ -350,8 +350,12 @@ def drawCenters(ima, mask, label):
 
     contours, hierarchies = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     coordinate_points = []
+    areas = []
     for i in contours:
+        areas.append(cv2.contourArea(i))
 
+    for i in contours:
+        if cv2.contourArea(i) == max(areas): continue
         M = cv2.moments(i)
 
         if M['m00'] != 0:

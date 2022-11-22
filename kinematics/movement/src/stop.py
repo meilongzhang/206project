@@ -4,6 +4,8 @@ import sensor_msgs
 from sensor_msgs.msg import JointState
 import nav_msgs
 from nav_msgs.msg import Odometry
+import move
+
 
 
 def listener():
@@ -13,7 +15,7 @@ def listener():
     rospy.spin()
 
 def callback(data):
-    print(data)
+    print(data.pose.pose.position.x, data.pose.pose.position.y)
 
 if __name__ == '__main__':
     listener()
