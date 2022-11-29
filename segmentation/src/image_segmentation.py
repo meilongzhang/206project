@@ -20,22 +20,21 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 import rospy
 from sensor_msgs.msg import Image
-from lab4_cam.src import ImageSrv, ImageSrvResponse
 import cv2, time, sys
 from cv_bridge import CvBridge, CvBridgeError
-
+from cv2 import VideoCapture
+import pygame
+import pygame.camera
+"""
+sys.path.append('../../')
+from lab4_cam.srv import ImageSrv, ImageSrvResponse
+"""
 this_file = os.path.dirname(os.path.abspath(__file__))
 IMG_DIR = '/'.join(this_file.split('/')[:-2]) + '/img'
 #grab an imae from the image node
 def ros_to_np_img(ros_img_msg):
   return np.array(bridge.imgmsg_to_cv2(ros_img_msg,'bgr8'))
-last_image_service = rospy.ServiceProxy('last_image', ImageSrv)
-ros_img_msg = last_image_service().image_data
-# Convert the ROS message to a NumPy image
-np_image = ros_to_np_img(ros_img_msg)
- #TODO - pass the image from service to the fucntions below as an array 
-# Display the CV Image
-cv2.imshow("CV Image", np_image)
+
 
 def read_image(img_name, grayscale=False):
     """ reads an image
@@ -317,7 +316,7 @@ def mask_red(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # define range of red color in HSV
     lower_red = np.array([0,50,50])
-    upper_red = np.array([10,255,255])
+    upper_red = np.array([5,255,255])
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_red, upper_red)
     # Bitwise-AND mask and original image
@@ -388,10 +387,29 @@ def drawCenters(ima, mask, label):
 
 if __name__ == '__main__':
     # adjust the file names here
+    """
+    last_image_service = rospy.ServiceProxy('last_image', ImageSrv)
+    ros_img_msg = last_image_service().image_data
+    # Convert the ROS message to a NumPy image
+    np_image = ros_to_np_img(ros_img_msg)
+     #TODO - pass the image from service to the fucntions below as an array 
+    # Display the CV Image
+    cv2.imshow("CV Image", np_image)
+    """
+    cam = VideoCapture(0)
+    result, image = cam.read()
+    if result:
+        image = cv2.resize(image, (600, 400))
+        cv2.imshow("image", image)
+        cv2.waitKey()
+
     
-    test_img = read_image(IMG_DIR + '/frame0000.jpg', grayscale=False)
-    im = read_image(IMG_DIR + '/frame0000.jpg')
-    ima = read_image(IMG_DIR + '/frame0000.jpg')
+    #test_img = read_image(IMG_DIR + '/frame0000.jpg', grayscale=False)
+    #im = read_image(IMG_DIR + '/frame0000.jpg')
+    #ima = read_image(IMG_DIR + '/frame0000.jpg')
+
+    im = image.copy()
+    ima = image.copy()
     
    
     # test_img = read_image(IMG_DIR + '/lego.jpg', grayscale=True)
