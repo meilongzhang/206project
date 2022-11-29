@@ -74,6 +74,18 @@ def resample_from_index(particles, weights, indexes):
     weights.fill (1.0 / len(weights))
 
 ####### EXAMPLE PARTICLE FILTER ########
+#get topics 
+self._sensor_topic = rospy.get_param("~topics/sensor")
+# -- self._vis_topic
+self._vis_topic = rospy.get_param("~topics/vis")
+# Frames.
+
+# TODO! You'll need to set values for class variables called:
+# self._sensor_frame = rospy.get_param("sensor_frame")
+self._sensor_frame = rospy.get_param("~frames/sensor")
+# self._sensor_frame = rospy.get_param("base_link")
+self._fixed_frame = rospy.get_param("~frames/fixed")
+###
 def run_pf1(N, iters=18, sensor_std_err=.1, 
             do_plot=True, plot_particles=False,
             xlim=(0, 20), ylim=(0, 20),
@@ -99,6 +111,9 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
         plt.scatter(particles[:, 0], particles[:, 1], 
                     alpha=alpha, color='g') 
     xs = []
+    #get the robot pose 
+    pose = self._tf_buffer.lookup_transform(
+            self._fixed_frame, self._sensor_frame, rospy.Time())
     #give robot pose by initial robot position (#TODO)
     sensor_x = pose.transform.translation.x
     sensor_y = pose.transform.translation.y

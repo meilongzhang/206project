@@ -18,9 +18,24 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+import rospy
+from sensor_msgs.msg import Image
+from lab4_cam.src import ImageSrv, ImageSrvResponse
+import cv2, time, sys
+from cv_bridge import CvBridge, CvBridgeError
 
 this_file = os.path.dirname(os.path.abspath(__file__))
 IMG_DIR = '/'.join(this_file.split('/')[:-2]) + '/img'
+#grab an imae from the image node
+def ros_to_np_img(ros_img_msg):
+  return np.array(bridge.imgmsg_to_cv2(ros_img_msg,'bgr8'))
+last_image_service = rospy.ServiceProxy('last_image', ImageSrv)
+ros_img_msg = last_image_service().image_data
+# Convert the ROS message to a NumPy image
+np_image = ros_to_np_img(ros_img_msg)
+ #TODO - pass the image from service to the fucntions below as an array 
+# Display the CV Image
+cv2.imshow("CV Image", np_image)
 
 def read_image(img_name, grayscale=False):
     """ reads an image
