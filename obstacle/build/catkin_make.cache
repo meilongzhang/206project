@@ -1,0 +1,2 @@
+obstacle
+-DCATKIN_DEVEL_PREFIX=/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/obstacle/devel -DCMAKE_INSTALL_PREFIX=/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/obstacle/install -G Unix Makefiles

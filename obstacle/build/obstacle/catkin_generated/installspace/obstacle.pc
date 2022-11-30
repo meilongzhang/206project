@@ -1,0 +1,8 @@
+prefix=/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/obstacle/install
+
+Name: obstacle
+Description: Description of obstacle
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
