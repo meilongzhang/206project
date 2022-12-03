@@ -10,7 +10,7 @@ import rospy
 import tf2_ros
 import sys
 import numpy as np 
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist , Point 
 import math as mt 
 from tf.transformations import euler_from_quaternion
 
@@ -30,84 +30,106 @@ def controller():
   pub = rospy.Publisher('cmd_vel' , Twist, queue_size=10)
   tfBuffer = tf2_ros.Buffer()
   tfListener = tf2_ros.TransformListener(tfBuffer)
+  # tfListener = tf2_ros.TransformListener(tfBuffer)
   
   # Create a timer object that will sleep long enough to result in
   # a 10Hz publishing rate
   r = rospy.Rate(10) # 10hz
-
-  KI = 0.2
-  KP = 0.3
-  KD = 0.02
-  KP_a = 0.3
-  KI_a = 0.2
-  KD_a = 0.02
+  #set variables
+  control_command = Twist()
+  position = Point()
+  #PID controller variables 
+  KI = 0.02
+  KP = 0.03
+  KD = 0.01
+  KP_a = 0.03
+  KI_a = 0.02
+  KD_a = 0.01
   dt = 0.01
-
-  goalX = 0
-  goalY = 0
-
+  #goal positions 
+  goalX = 0.4
+  goalY = 0.3
+  goalZ = 0
+  #current positions 
+  curX = 0 
+  curY = 0 
+  #translation errors 
+  prev_err_t = 0
+  sum_err_t = 0 
+  #angular errors 
+  prev_err_r = 0 
+  sum_err_r = 0
+  #functrions to minimize 
+  #translation 
+  err_t = mt.sqrt((goalX - curX)**2 + (goalY - curY)**2)
+  #rotation 
+  err_r = mt.atan2(goalY - curY, goalX - curX)
   # Loop until the node is killed with Ctrl-C
   while not rospy.is_shutdown():
-    try:
-      
+    try:     
+      while err_t > 0.05:
+        print(err_t)
+        trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
+        rot = euler_from_quaternion(
+              [trans.transform.rotation.x, trans.transform.rotation.y,
+                trans.transform.rotation.z, trans.transform.rotation.w])
+        #convert rotation from quaterion to euler and get the Z component 
+        rot = rot[2]
+        #get the x and Y translation only
+        curX = trans.transform.translation.x
+        curY = trans.transform.translation.y
+        print(curX,curY)
+        #tune the rotational error 
+        err_r = mt.atan2(goalY - curY, goalX - curX)
+        rot_l = mt.pi/4 
+        #take into account robot orientation 
+        if err_r < -rot_l or err_r > rot_l:
+              if goalY < 0 and curY < goalY:
+                err_r = -2*mt.pi + err_r
+              elif goalY >= 0 and curY > goalY:
+                err_r = 2*mt.pi + err_r
+        if prev_err_r > mt.pi-0.1 and rot <= 0:
+            rot = 2*mt.pi + rot
+        elif prev_err_r < -mt.pi+0.1 and rot > 0:
+            rot = -2*mt.pi + rot 
 
-      # we used this to trouble shoot
-      # control_command = Twist()
-      # control_command.linear.x = 2
-      # control_command.linear.y = 0.4
-      # control_command.linear.z = 0
-      # control_command.angular.x = 0
-      # control_command.angular.y = 0
-      # control_command.angular.z = 0.03
-      # print(control_command)
-      # pub.publish(control_command)
-      
-      i = 0
-      prev_angle = 0 
-      prev_err_t = 0
-      sum_err_t = 0 
-      total_angle = 0
-      while i < 100: #err_t > 0.05:
-        #PID for err_t 
+        angle_derv = err_r - prev_err_r
+        trans_derv = err_t - prev_err_t 
+
+        #PID controller for distance 
+        p_distance = KP * err_t * KI * sum_err_t + KD*trans_derv
+        print(p_distance)
+        #PID controller for rotation
+        p_rot = KP_a * err_r * KI_a * sum_err_r + KD*angle_derv
+        print(p_rot)
+
         # sum_err_t += err_t * dt
         # dedt_err_t = (err_t - prev_err_t) / dt
         # wX = KP*err_t + KI * sum_err_t + KD * dedt_err_t
         # prev_err_t = err_t
-        trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
-        (roll, pitch, yaw) = euler_from_quaternion(
-              [trans.transform.rotation.x, trans.transform.rotation.y,
-                trans.transform.rotation.z, trans.transform.rotation.w])
-        
-        curX = trans.transform.translation.x
-        curY = trans.transform.translation.y
-        print(curX, curY, goalX, goalY)
-        err_t = mt.sqrt((goalX - curX)**2 + (goalY - curY)**2)
-        angl_t = mt.atan2(goalY - curY, goalX - curX)
-        
-        
-        sum_err_t += err_t * dt
-        dedt_err_t = (err_t - prev_err_t) / dt
-        wX = KP*err_t + KI * sum_err_t + KD * dedt_err_t
-        prev_err_t = err_t
-        #PID for err_angl
-        diff_angle = (angl_t - prev_angle)/dt
-        total_angle += angl_t * dt
-        Wz = KP_a * angl_t + KI_a * total_angle + KD_a * diff_angle
-        prev_angle = angl_t
-        print("wx: ", wX, " wz: ", Wz)
-        control_command = Twist()
-        control_command.linear.x = wX
+        # #PID for err_angl
+        # diff_angle = (angl_t - prev_angle)/dt
+        # total_angle += angl_t * dt
+        # Wz = KP_a * angl_t + KI_a * total_angle + KD_a * diff_angle
+        # prev_angle = angl_t
+        # print("wx: ", wX, " wz: ", Wz)
+
+        control_command.linear.x = p_distance
         control_command.linear.y = 0
         control_command.linear.z = 0
         control_command.angular.x = 0
         control_command.angular.y = 0
-        control_command.angular.z = Wz
-        # print(control_command)
-        i += 1
+        control_command.angular.z = p_rot - rot
+
+        prev_err_r = rot 
         pub.publish(control_command)
-        
+        r.sleep()
+        prev_err_t = err_t
+        sum_err_t += err_t
+        sum_err_r += err_r
       
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+      print('not again')
       pass
     # Use our rate object to sleep until it is time to publish again
     r.sleep()

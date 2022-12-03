@@ -49,33 +49,87 @@ def controller():
 
   goalX = 0
   goalY = 0
-
+  # finishedRotation = False
+  aligned = False
+  oriented = False
+  arrived = False
   # Loop until the node is killed with Ctrl-C
   while not rospy.is_shutdown():
     try:
-      
-
-    # we used this to trouble shoot
+      # GETTING CURRENT STATE OF ROBOT
       trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
       (roll, pitch, yaw) = euler_from_quaternion(
               [trans.transform.rotation.x, trans.transform.rotation.y,
                 trans.transform.rotation.z, trans.transform.rotation.w])
-      """ if yaw is negative, then bot is not facing goal. 
-      do angle rotation until yaw is positive, then move forward."""
-      print(yaw)
+
       curX = trans.transform.translation.x
       curY = trans.transform.translation.y
-      print(curX, curY, goalX, goalY)
-      err_t = goalX - curX
-      angl_t = goalY - curY
-      wX = K1*err_t
-      Wz = K2 * angl_t
-      print("wx: ", wX, " wz: ", Wz)
-      control_command = Twist()
-      control_command.linear.x = wX
-      control_command.angular.z = Wz
-      pub.publish(control_command)
+      diffX = goalX - curX
+      diffY = goalY - curY
+      # ALIGNING STEP
       
+      if not aligned:
+        targetYaw = 0
+        yawDiff = abs(yaw - targetYaw)
+  
+        if yawDiff >= 0.1: 
+          control_command = Twist()
+          control_command.angular.z = 0.5
+          pub.publish(control_command)
+
+        if yawDiff < 0.1:
+          print("Aligning Step Done")
+          aligned = True
+
+      # ORIENTATION STEP
+      elif not oriented:
+        targetYaw = mt.atan2(diffY, diffX)
+        yawDiff = abs(yaw - targetYaw)
+        if yawDiff >= 0.1:
+          control_command = Twist()
+          control_command.angular.z = 0.5
+          pub.publish(control_command)
+
+        if yawDiff < 0.1:
+          print("Orientation Step Done")
+          oriented = True
+
+      # MOVEMENT STEP
+      elif not arrived:
+        distance = mt.sqrt((goalX - curX) ** 2 + (goalY - curY) ** 2)
+        #diffX = goalX - curX
+        print("distance: ", distance)
+        if distance >= 0.03:
+          wX = K1*distance
+          control_command = Twist()
+          control_command.linear.x = wX
+          pub.publish(control_command)
+        if distance < 0.03:
+          print("Movement Step Done")
+          arrived = True
+
+      if arrived:
+        print("FETCH NEXT WAYPOINT")
+      """
+      if err_t < 0.05:
+        print(curX, goalX)
+        print ('madeit to switching false loop')
+        nextstep= False
+        thirdstep = True
+
+      if thirdstep: 
+        print ('madeit to curY')
+        control_command = Twist()
+        control_command.angular.z = 0.5
+        pub.publish(control_command)
+        
+      if int(curY) < 0 and nextstep: 
+        print ('madeit to curY negative')
+        control_command = Twist()
+        control_command.angular.z = mt.radians(90)
+        pub.publish(control_command)
+        thirdstep = True
+      """
       # i = 0
       # while i < 100:
       #   trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
@@ -102,7 +156,9 @@ def controller():
     # Use our rate object to sleep until it is time to publish again
     r.sleep()
 
-      
+
+
+
 # This is Python's sytax for a main() method, which is run by default
 # when exectued in the shell
 if __name__ == '__main__':
