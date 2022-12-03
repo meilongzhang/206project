@@ -47,8 +47,8 @@ def controller():
   KD_a = 0.01
   dt = 0.01
   #goal positions 
-  goalX = 0.4
-  goalY = 0.3
+  goalX = -0.3
+  goalY = 0
   goalZ = 0
   #current positions 
   curX = 0 
@@ -65,9 +65,13 @@ def controller():
   #rotation 
   err_r = mt.atan2(goalY - curY, goalX - curX)
   # Loop until the node is killed with Ctrl-C
+  print('i am running')
   while not rospy.is_shutdown():
     try:     
-      while err_t > 0.05:
+      while err_t > 0.05 or err_r > 0.05:
+        #translation
+        err_t = mt.sqrt((goalX - curX)**2 + (goalY - curY)**2)
+        print('current error')
         print(err_t)
         trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
         rot = euler_from_quaternion(
@@ -78,6 +82,7 @@ def controller():
         #get the x and Y translation only
         curX = trans.transform.translation.x
         curY = trans.transform.translation.y
+        print('current position')
         print(curX,curY)
         #tune the rotational error 
         err_r = mt.atan2(goalY - curY, goalX - curX)
@@ -98,8 +103,10 @@ def controller():
 
         #PID controller for distance 
         p_distance = KP * err_t * KI * sum_err_t + KD*trans_derv
+        print('current distance to target')
         print(p_distance)
         #PID controller for rotation
+        print('current rotation to target')
         p_rot = KP_a * err_r * KI_a * sum_err_r + KD*angle_derv
         print(p_rot)
 
