@@ -3,8 +3,11 @@ from RRTbasePy import RRTMap
 import pathSmooth
 import sys
 import pygame
+import rospy
+from std_msgs.msg import String
 
 def main(type):
+    pub = rospy.Publisher('waypoints', String, queue_size=10)
     dimensions=(600,1000)
     start=(50,50)
     goal=(510,510)
@@ -41,7 +44,12 @@ def main(type):
     
     map.drawPath(graph.getPathCoords())
     calculatedPath = graph.getPathCoords()[::-1]
-    print(calculatedPath[0], calculatedPath[1])
+    while not rospy.is_shutdown():
+        waypo = String()
+        waypo.data = str(calculatedPath)
+        pub.publish(waypo)
+    
+    
 
 
 
@@ -67,6 +75,7 @@ if __name__ == '__main__':
     """
     input = sys.argv[1]
     print(f"Algorithm Type: {input}")
+    rospy.init_node('planning_talker', anonymous=True)
     main(input)
 
     

@@ -11,9 +11,13 @@ import tf2_ros
 import sys
 import numpy as np 
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 import math as mt 
 from tf.transformations import euler_from_quaternion
 
+
+goals = []
+pathFound = False
 #Define the method which contains the main functionality of the node.
 def controller():
   """
@@ -25,11 +29,15 @@ def controller():
   """
 
   ################################### YOUR CODE HERE ##############
-
+  global goals
+  global pathFound
+  
   #Create a publisher and a tf buffer, which is primed with a tf listener
   pub = rospy.Publisher('cmd_vel' , Twist, queue_size=10)
+  sub = rospy.Subscriber('waypoints', String, callback)
   tfBuffer = tf2_ros.Buffer()
   tfListener = tf2_ros.TransformListener(tfBuffer)
+  
   
   # Create a timer object that will sleep long enough to result in
   # a 10Hz publishing rate
@@ -46,9 +54,13 @@ def controller():
   KI_a = 0.2
   KD_a = 0.02
   dt = 0.01
-
-  goalX = 0
-  goalY = 0
+  
+  while True:
+    try:
+      goalX, goalY = goals.pop(0)
+      break
+    except:
+      pass
   # finishedRotation = False
   aligned = False
   oriented = False
@@ -66,8 +78,9 @@ def controller():
       curY = trans.transform.translation.y
       diffX = goalX - curX
       diffY = goalY - curY
+      print("goal X: ", goalX, " goal Y: ", goalY)
+      print("current X: ", curX, " current Y: ", curY)
       # ALIGNING STEP
-      
       if not aligned:
         targetYaw = 0
         yawDiff = abs(yaw - targetYaw)
@@ -109,47 +122,12 @@ def controller():
           arrived = True
 
       if arrived:
-        print("FETCH NEXT WAYPOINT")
-      """
-      if err_t < 0.05:
-        print(curX, goalX)
-        print ('madeit to switching false loop')
-        nextstep= False
-        thirdstep = True
-
-      if thirdstep: 
-        print ('madeit to curY')
-        control_command = Twist()
-        control_command.angular.z = 0.5
-        pub.publish(control_command)
-        
-      if int(curY) < 0 and nextstep: 
-        print ('madeit to curY negative')
-        control_command = Twist()
-        control_command.angular.z = mt.radians(90)
-        pub.publish(control_command)
-        thirdstep = True
-      """
-      # i = 0
-      # while i < 100:
-      #   trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
-      #   curX = trans.transform.translation.x
-      #   curY = trans.transform.translation.y
-      #   print(curX, curY, goalX, goalY)
-      #   err_t = goalX - curX
-      #   angl_t = goalY - curY
-      #   wX = K1*err_t
-      #   Wz = K2 * angl_t
-      #   print("wx: ", wX, " wz: ", Wz)
-      #   control_command = Twist()
-      #   control_command.linear.x = wX
-      #   control_command.linear.y = 0
-      #   control_command.linear.z = 0
-      #   control_command.angular.x = 0
-      #   control_command.angular.y = 0
-      #   control_command.angular.z = Wz
-      #   i += 1
-      #   pub.publish(control_command)
+        arrived = False
+        oriented = False
+        aligned = False
+        print("Arrived at checkpoint, moving onto next")
+        if len(goals) != 0:
+          goalX, goalY = goals.pop(0)
       
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       pass
@@ -157,6 +135,18 @@ def controller():
     r.sleep()
 
 
+def callback(data):
+  global goals
+  global pathFound
+  if not pathFound:
+    print("in here")
+    strNumbers = data.data[1:-1].replace('(', '').replace(')', '').split(', ')
+    nums = [int(x) for x in strNumbers][2:]
+    a = iter(nums)
+    goals = [(x/1000, y/1000) for x, y in zip(a, a)] # change this factor
+    print("set goals")
+    pathFound = True
+  
 
 
 # This is Python's sytax for a main() method, which is run by default
@@ -168,7 +158,6 @@ if __name__ == '__main__':
   #Run this program as a new node in the ROS computation graph 
   #called /turtlebot_controller.
   rospy.init_node('turtlebot_controller', anonymous=True)
-
   try:
     controller()
   except rospy.ROSInterruptException:

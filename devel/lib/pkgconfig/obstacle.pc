@@ -1,4 +1,4 @@
-prefix=/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel
+prefix=/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel
 
 Name: obstacle
 Description: Description of obstacle

@@ -399,32 +399,13 @@ if __name__ == '__main__':
     cam = VideoCapture(0)
     result, image = cam.read()
     if result:
-        image = cv2.resize(image, (600, 400))
+        image = cv2.resize(image, (600, 400)) # need to find better values for these
         cv2.imshow("image", image)
         cv2.waitKey()
-
-    
-    #test_img = read_image(IMG_DIR + '/frame0000.jpg', grayscale=False)
-    #im = read_image(IMG_DIR + '/frame0000.jpg')
-    #ima = read_image(IMG_DIR + '/frame0000.jpg')
 
     im = image.copy()
     ima = image.copy()
     
-   
-    # test_img = read_image(IMG_DIR + '/lego.jpg', grayscale=True)
-    # test_img_color = read_image(IMG_DIR + '/lego.jpg')
-    
-    # test_img = read_image(IMG_DIR + '/staples.jpg', grayscale=True)
-    # test_img_color = read_image(IMG_DIR + '/staples.jpg')
-    
-    # uncomment the test you want to run
-    # it will plot the image and also save it
-
-    """
-    mask = mask_green(im)
-    ima = drawCenters(ima, mask, 'green')
-    """
     mask = mask_blue(im)
     ima, corners = drawCenters(ima, mask, 'blue')
     print(f"these are the corners: {corners}")
@@ -433,24 +414,5 @@ if __name__ == '__main__':
     ima, waypoints = drawCenters(ima, mask, 'red')
     print(f"these are the waypoints: {waypoints}")
 
-
     cv2.imshow("", ima)
     cv2.waitKey(0)
-
-    
-
-    """
-    kernel = np.ones((3, 3),np.uint8)
-    dilated_image = cv2.dilate(image, kernel, iterations = 1)
-    cv2.imshow("dilated_image", dilated_image)
-    cv2.waitKey(0)
-    eroded_image = cv2.erode(dilated_image, kernel, iterations = 1)
-    cv2.imshow("eroded_image", eroded_image)
-    cv2.waitKey(0)
-    """
-
-    #test_thresh_naive(test_img, 170, 255)
-    
-    #test_edge_naive(test_img)
-    #test_edge_canny(test_img)
-    #test_cluster(test_img_color, 6)
