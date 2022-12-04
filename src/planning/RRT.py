@@ -6,13 +6,50 @@ import pygame
 import rospy
 from std_msgs.msg import String
 
+
+corners = []
+obstacles = []
+layoutFound = False
+
+
 def main(type):
+    global corners
+    global obstacles
+
+    
     pub = rospy.Publisher('waypoints', String, queue_size=10)
-    dimensions=(600,1000)
-    start=(50,50)
-    goal=(510,510)
+    sub = rospy.Subscriber('layout', String, callback)
+
+
+    while True:
+        if len(corners) != 0:
+            break
+        else:
+            print("waiting for corners")
+
+    print("no longer waiting for corners")
+
+    maxX = 0
+    maxY = 0
+    for corner in corners:
+        if corner[0] > maxX:
+            maxX = corner[0]
+            maxY = corner[1]
+
+    for corner in corners:
+        if corner[0] == maxX:
+            pass
+        else:
+            goalX = corner[0]
+            goalY = corner[1]
+    
+
+    print(corners[0])
+    dimensions=corners[0]
+    start=(0,0)
+    goal=(goalX,goalY)
     obsdim=30
-    obsnum=50
+    obsnum=len(obstacles)
     iteration = 0
     radius=100
 
@@ -21,7 +58,8 @@ def main(type):
     graph=RRTGraph(start,goal,dimensions,obsdim,obsnum,radius)
 
     #obstacles=graph.makeobs()
-    obstacles = graph.convertobs([(500,400), (200,130)])
+    obstacles = [(o[0] - obsdim/2, o[1] - obsdim/2) for o in obstacles]
+    obstacles = graph.convertobs(obstacles)
     map.drawMap(obstacles)
 
     while (not graph.path_to_goal()):
@@ -44,6 +82,10 @@ def main(type):
     
     map.drawPath(graph.getPathCoords())
     calculatedPath = graph.getPathCoords()[::-1]
+
+
+    pygame.display.update()
+    pygame.event.clear()
     while not rospy.is_shutdown():
         waypo = String()
         waypo.data = str(calculatedPath)
@@ -58,10 +100,46 @@ def main(type):
     #map=RRTMap(start,goal,dimensions,obsdim,obsnum)
     #map.drawMap(obstacles, dim=True)
     #map.drawPath(smoothedPath)
-    pygame.display.update()
-    pygame.event.clear()
-    pygame.event.wait(0)
+    
 
+def callback(data):
+    if not layoutFound:
+        data = data.data[1:-1].split(' + ')
+        corners = data[0]
+        obstacles = data[1]
+        corners = corners.replace('(', '').replace(')', '').replace(']', '').split(', ')
+        obstacles = obstacles.replace('(', '').replace(')', '').replace('[', '').split(', ')
+        corners = [int(x) for x in corners]
+        obstacles = [int(x) for x in obstacles]
+        a = iter(corners)
+        b = iter(obstacles)
+        corners = [(x, y) for x, y in zip(a, a)]
+        obstacles = [(x, y) for x, y in zip(b, b)]
+        moveToZero(corners, obstacles)
+
+def moveToZero(c, o):
+    global corners
+    global obstacles
+    global layoutFound
+    corners = []
+    obstacles = []
+    minX = float("inf")
+    minY = float("inf")
+    for corner in c:
+        if corner[0] < minX or corner[1] < minY:
+            minX = corner[0]
+            minY = corner[1]
+
+    for corner in c:
+        if corner[0] - minX == 0:
+            pass
+        else:
+            corners.append((corner[0] - minX, corner[1] - minY))
+
+    for obstacle in o:
+        obstacles.append((obstacle[0] - minX, obstacle[1] - minY))
+
+    layoutFound = True
 
 if __name__ == '__main__':
     """

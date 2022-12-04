@@ -25,6 +25,8 @@ from cv_bridge import CvBridge, CvBridgeError
 from cv2 import VideoCapture
 import pygame
 import pygame.camera
+from std_msgs.msg import String
+
 """
 sys.path.append('../../')
 from lab4_cam.srv import ImageSrv, ImageSrvResponse
@@ -320,7 +322,7 @@ def mask_red(image):
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_red, upper_red)
     # Bitwise-AND mask and original image
-    res = cv2.bitwise_and(im,im, mask= mask)
+    res = cv2.bitwise_and(image,image, mask= mask)
     return mask
 
 def mask_green(image):
@@ -332,7 +334,7 @@ def mask_green(image):
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_red, upper_red)
     # Bitwise-AND mask and original image
-    res = cv2.bitwise_and(im,im, mask= mask)
+    res = cv2.bitwise_and(image,image, mask= mask)
     return mask
 
 def mask_blue(image):
@@ -344,7 +346,7 @@ def mask_blue(image):
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_g, upper_g)
     # Bitwise-AND mask and original image
-    res = cv2.bitwise_and(im,im, mask= mask)
+    res = cv2.bitwise_and(image,image, mask= mask)
     return mask
 
 def drawCenters(ima, mask, label):
@@ -385,17 +387,9 @@ def drawCenters(ima, mask, label):
     return ima, coordinate_points
     
 
-if __name__ == '__main__':
-    # adjust the file names here
-    """
-    last_image_service = rospy.ServiceProxy('last_image', ImageSrv)
-    ros_img_msg = last_image_service().image_data
-    # Convert the ROS message to a NumPy image
-    np_image = ros_to_np_img(ros_img_msg)
-     #TODO - pass the image from service to the fucntions below as an array 
-    # Display the CV Image
-    cv2.imshow("CV Image", np_image)
-    """
+def main():   
+    pub = rospy.Publisher('layout', String, queue_size=10)
+   
     cam = VideoCapture(0)
     result, image = cam.read()
     if result:
@@ -408,11 +402,36 @@ if __name__ == '__main__':
     
     mask = mask_blue(im)
     ima, corners = drawCenters(ima, mask, 'blue')
-    print(f"these are the corners: {corners}")
-
     mask = mask_red(im)
     ima, waypoints = drawCenters(ima, mask, 'red')
-    print(f"these are the waypoints: {waypoints}")
+    
+    message = String()
+    message.data = str(corners) + " + " + str(waypoints)
 
     cv2.imshow("", ima)
     cv2.waitKey(0)
+    while not rospy.is_shutdown():
+        pub.publish(message)
+    #print(f"these are the corners: {corners}")
+    #print(f"these are the waypoints: {waypoints}")
+
+    
+
+if __name__ == '__main__':
+    # adjust the file names here
+    """
+    last_image_service = rospy.ServiceProxy('last_image', ImageSrv)
+    ros_img_msg = last_image_service().image_data
+    # Convert the ROS message to a NumPy image
+    np_image = ros_to_np_img(ros_img_msg)
+     #TODO - pass the image from service to the fucntions below as an array 
+    # Display the CV Image
+    cv2.imshow("CV Image", np_image)
+    """
+    rospy.init_node('segmentation', anonymous=True)
+    main()
+
+
+
+
+

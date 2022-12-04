@@ -143,7 +143,7 @@ def callback(data):
     strNumbers = data.data[1:-1].replace('(', '').replace(')', '').split(', ')
     nums = [int(x) for x in strNumbers][2:]
     a = iter(nums)
-    goals = [(x/1000, y/1000) for x, y in zip(a, a)] # change this factor
+    goals = [(x/500, y/500) for x, y in zip(a, a)] # change this factor
     print("set goals")
     pathFound = True
   
