@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src
+CMAKE_SOURCE_DIR = /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build
+CMAKE_BINARY_DIR = /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build
 
 # Utility rule file for lab4_cam_gencpp.
 
@@ -63,10 +63,10 @@ lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/build: lab4_cam_gencpp
 .PHONY : lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/build
 
 lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/clean:
-	cd /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam && $(CMAKE_COMMAND) -P CMakeFiles/lab4_cam_gencpp.dir/cmake_clean.cmake
+	cd /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam && $(CMAKE_COMMAND) -P CMakeFiles/lab4_cam_gencpp.dir/cmake_clean.cmake
 .PHONY : lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/clean
 
 lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/depend:
-	cd /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : lab4_cam/CMakeFiles/lab4_cam_gencpp.dir/depend
 

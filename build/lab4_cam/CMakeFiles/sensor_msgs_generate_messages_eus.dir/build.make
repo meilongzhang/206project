@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src
+CMAKE_SOURCE_DIR = /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build
+CMAKE_BINARY_DIR = /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build
 
 # Utility rule file for sensor_msgs_generate_messages_eus.
 
@@ -63,10 +63,10 @@ lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build: sensor_msgs_gen
 .PHONY : lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
 
 lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean:
-	cd /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_eus.dir/cmake_clean.cmake
+	cd /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_eus.dir/cmake_clean.cmake
 .PHONY : lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean
 
 lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend:
-	cd /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : lab4_cam/CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend
 

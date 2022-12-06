@@ -31,21 +31,22 @@ def main(type):
 
     maxX = 0
     maxY = 0
+    
     for corner in corners:
         if corner[0] > maxX:
-            maxX = corner[0]
-            maxY = corner[1]
+            maxY = corner[0]
+            maxX = corner[1]
 
     for corner in corners:
         if corner[0] == maxX:
             pass
         else:
-            goalX = corner[0]
-            goalY = corner[1]
+            goalY = corner[0]
+            goalX = corner[1]
     
 
     print(corners[0])
-    dimensions=corners[0]
+    dimensions=(maxX, maxY)
     start=(0,0)
     goal=(goalX,goalY)
     obsdim=30

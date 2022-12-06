@@ -186,7 +186,7 @@ class RRTGraph:
             self.add_edge(n1,n2)
             return True
 
-    def step(self,nnear,nrand,dmax=100):
+    def step(self,nnear,nrand,dmax=20):
         d = self.distance(nnear,nrand)
         if d>dmax:
             u=dmax/d
@@ -201,6 +201,7 @@ class RRTGraph:
                 self.add_node(nrand,self.goal[0],self.goal[1])
                 self.goalstate=nrand
                 self.goalFlag=True
+                #self.connect(nnear, nrand)
             else:
                 self.add_node(nrand,x,y)
 

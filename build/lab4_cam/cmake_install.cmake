@@ -1,8 +1,8 @@
-# Install script for directory: /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam
+# Install script for directory: /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/install")
+  set(CMAKE_INSTALL_PREFIX "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,53 +38,53 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/srv" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam/srv/ImageSrv.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/srv" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam/srv/ImageSrv.srv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/cmake" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/cmake" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/include/lab4_cam")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/include/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/share/roseus/ros/lab4_cam")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/share/roseus/ros/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/share/common-lisp/ros/lab4_cam")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/share/common-lisp/ros/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/share/gennodejs/ros/lab4_cam")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/share/gennodejs/ros/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib/python3/dist-packages/lab4_cam")
+  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/lib/python3/dist-packages/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib/python3/dist-packages/lab4_cam")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/lib/python3/dist-packages/lab4_cam")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/cmake" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/cmake" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/catkin_generated/installspace/lab4_cam-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam/cmake" TYPE FILE FILES
-    "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/catkin_generated/installspace/lab4_camConfig.cmake"
-    "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/lab4_cam/catkin_generated/installspace/lab4_camConfig-version.cmake"
+    "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/catkin_generated/installspace/lab4_camConfig.cmake"
+    "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/lab4_cam/catkin_generated/installspace/lab4_camConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab4_cam" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam/package.xml")
 endif()
 

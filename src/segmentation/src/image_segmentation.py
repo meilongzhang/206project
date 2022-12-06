@@ -317,8 +317,8 @@ def mask_red(image):
     # Convert BGR to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # define range of red color in HSV
-    lower_red = np.array([0,50,50])
-    upper_red = np.array([5,255,255])
+    lower_red = np.array([150,75,75])
+    upper_red = np.array([180,255,255])
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_red, upper_red)
     # Bitwise-AND mask and original image
@@ -355,8 +355,8 @@ def drawCenters(ima, mask, label):
     eroded = cv2.erode(mask, kernel, iterations=1)
     image = cv2.dilate(eroded, kernel, iterations=5)
     
-    cv2.imshow("erode+dilate",image)
-    cv2.waitKey()
+    #cv2.imshow("erode+dilate",image)
+    #cv2.waitKey()
     
      
     blur = cv2.GaussianBlur(image, (5, 5),
@@ -394,16 +394,18 @@ def main():
     result, image = cam.read()
     if result:
         image = cv2.resize(image, (600, 400)) # need to find better values for these
-        cv2.imshow("image", image)
-        cv2.waitKey()
+        #cv2.imshow("image", image)
+        #cv2.waitKey()
 
+    image = image[50:350, 50:350]
     im = image.copy()
     ima = image.copy()
     
-    mask = mask_blue(im)
-    ima, corners = drawCenters(ima, mask, 'blue')
     mask = mask_red(im)
     ima, waypoints = drawCenters(ima, mask, 'red')
+    mask = mask_blue(im)
+    ima, corners = drawCenters(ima, mask, 'blue')
+    
     
     message = String()
     message.data = str(corners) + " + " + str(waypoints)

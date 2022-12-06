@@ -1,8 +1,8 @@
-# Install script for directory: /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/movement
+# Install script for directory: /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/movement
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/install")
+  set(CMAKE_INSTALL_PREFIX "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/movement/catkin_generated/installspace/movement.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/movement/catkin_generated/installspace/movement.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/movement/cmake" TYPE FILE FILES
-    "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/movement/catkin_generated/installspace/movementConfig.cmake"
-    "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/build/movement/catkin_generated/installspace/movementConfig-version.cmake"
+    "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/movement/catkin_generated/installspace/movementConfig.cmake"
+    "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/build/movement/catkin_generated/installspace/movementConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/movement" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/movement/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/movement" TYPE FILE FILES "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/movement/package.xml")
 endif()
 

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/share/gennodejs/ros/lab4_cam/srv/ImageSrv.js"
+  "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/share/gennodejs/ros/lab4_cam/srv/ImageSrv.js"
   "CMakeFiles/lab4_cam_generate_messages_nodejs"
 )
 

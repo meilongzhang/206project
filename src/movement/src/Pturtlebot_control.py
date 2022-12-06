@@ -57,7 +57,7 @@ def controller():
   
   while True:
     try:
-      goalX, goalY = goals.pop(0)
+      goalY, goalX = goals.pop(0)
       break
     except:
       pass
@@ -98,12 +98,12 @@ def controller():
       elif not oriented:
         targetYaw = mt.atan2(diffY, diffX)
         yawDiff = abs(yaw - targetYaw)
-        if yawDiff >= 0.1:
+        if yawDiff >= 0.05:
           control_command = Twist()
           control_command.angular.z = 0.5
           pub.publish(control_command)
 
-        if yawDiff < 0.1:
+        if yawDiff < 0.05:
           print("Orientation Step Done")
           oriented = True
 
@@ -143,7 +143,7 @@ def callback(data):
     strNumbers = data.data[1:-1].replace('(', '').replace(')', '').split(', ')
     nums = [int(x) for x in strNumbers][2:]
     a = iter(nums)
-    goals = [(x/500, y/500) for x, y in zip(a, a)] # change this factor
+    goals = [(x/150, y/150) for x, y in zip(a, a)] # change this factor
     print("set goals")
     pathFound = True
   
