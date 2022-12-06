@@ -30,7 +30,6 @@ def controller():
   pub = rospy.Publisher('cmd_vel' , Twist, queue_size=10)
   tfBuffer = tf2_ros.Buffer()
   tfListener = tf2_ros.TransformListener(tfBuffer)
-  # tfListener = tf2_ros.TransformListener(tfBuffer)
   
   # Create a timer object that will sleep long enough to result in
   # a 10Hz publishing rate
@@ -40,15 +39,15 @@ def controller():
   position = Point()
   #PID controller variables 
   KI = 0.02
-  KP = 0.03
+  KP = 0.3
   KD = 0.01
-  KP_a = 0.03
-  KI_a = 0.02
+  KP_a = 0.2
+  KI_a = 0.01
   KD_a = 0.01
   dt = 0.01
   #goal positions 
-  goalX = -0.3
-  goalY = 0
+  goalX = 0.1
+  goalY = 0.1
   goalZ = 0
   #current positions 
   curX = 0 
@@ -65,25 +64,23 @@ def controller():
   #rotation 
   err_r = mt.atan2(goalY - curY, goalX - curX)
   # Loop until the node is killed with Ctrl-C
-  print('i am running')
   while not rospy.is_shutdown():
     try:     
-      while err_t > 0.05 or err_r > 0.05:
+      while err_t > 0.05:
         #translation
         err_t = mt.sqrt((goalX - curX)**2 + (goalY - curY)**2)
-        print('current error')
-        print(err_t)
+        # print('current error in translation:', err_t)
         trans = tfBuffer.lookup_transform("odom","base_link", rospy.Time())
-        rot = euler_from_quaternion(
+        rotation = euler_from_quaternion(
               [trans.transform.rotation.x, trans.transform.rotation.y,
                 trans.transform.rotation.z, trans.transform.rotation.w])
         #convert rotation from quaterion to euler and get the Z component 
-        rot = rot[2]
+        rot = rotation[2]
+        print('current yaw: ', rot)
         #get the x and Y translation only
         curX = trans.transform.translation.x
         curY = trans.transform.translation.y
-        print('current position')
-        print(curX,curY)
+        # print('current position in x and y: ', curX,curY)
         #tune the rotational error 
         err_r = mt.atan2(goalY - curY, goalX - curX)
         rot_l = mt.pi/4 
@@ -102,14 +99,13 @@ def controller():
         trans_derv = err_t - prev_err_t 
 
         #PID controller for distance 
-        p_distance = KP * err_t * KI * sum_err_t + KD*trans_derv
-        print('current distance to target')
-        print(p_distance)
+        p_distance = KP * err_t + KI * sum_err_t + KD*trans_derv
+        # print('current distance to target: ' , p_distance)
         #PID controller for rotation
-        print('current rotation to target')
-        p_rot = KP_a * err_r * KI_a * sum_err_r + KD*angle_derv
-        print(p_rot)
-
+        p_rot = KP_a * err_r + KI_a * sum_err_r + KD_a*angle_derv
+        print('current command to target: ', p_rot)
+        print('current error rotation: ', mt.degrees(err_r))
+        print('\n')
         # sum_err_t += err_t * dt
         # dedt_err_t = (err_t - prev_err_t) / dt
         # wX = KP*err_t + KI * sum_err_t + KD * dedt_err_t
@@ -120,20 +116,21 @@ def controller():
         # Wz = KP_a * angl_t + KI_a * total_angle + KD_a * diff_angle
         # prev_angle = angl_t
         # print("wx: ", wX, " wz: ", Wz)
-
+        #define the controls 
         control_command.linear.x = p_distance
         control_command.linear.y = 0
         control_command.linear.z = 0
         control_command.angular.x = 0
         control_command.angular.y = 0
-        control_command.angular.z = p_rot - rot
+        # control_command.angular.z = p_rot - rot
+        control_command.angular.z = 0
 
-        prev_err_r = rot 
+        prev_err_r = err_r
         pub.publish(control_command)
         r.sleep()
         prev_err_t = err_t
         sum_err_t += err_t
-        sum_err_r += err_r
+        # sum_err_r += err_r
       
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       print('not again')
