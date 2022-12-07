@@ -67,14 +67,14 @@ set(lab4_cam_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(lab4_cam_SOURCE_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam)
-  set(lab4_cam_DEVEL_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel)
+  set(lab4_cam_SOURCE_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam)
+  set(lab4_cam_DEVEL_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel)
   set(lab4_cam_INSTALL_PREFIX "")
   set(lab4_cam_PREFIX ${lab4_cam_DEVEL_PREFIX})
 else()
   set(lab4_cam_SOURCE_PREFIX "")
   set(lab4_cam_DEVEL_PREFIX "")
-  set(lab4_cam_INSTALL_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/install)
+  set(lab4_cam_INSTALL_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/install)
   set(lab4_cam_PREFIX ${lab4_cam_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/install/lib;/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

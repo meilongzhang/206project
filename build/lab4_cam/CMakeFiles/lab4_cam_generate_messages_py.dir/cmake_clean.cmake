@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/lib/python3/dist-packages/lab4_cam/srv/_ImageSrv.py"
-  "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/lib/python3/dist-packages/lab4_cam/srv/__init__.py"
+  "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib/python3/dist-packages/lab4_cam/srv/_ImageSrv.py"
+  "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib/python3/dist-packages/lab4_cam/srv/__init__.py"
   "CMakeFiles/lab4_cam_generate_messages_py"
 )
 

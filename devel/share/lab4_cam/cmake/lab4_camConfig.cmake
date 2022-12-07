@@ -67,14 +67,14 @@ set(lab4_cam_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(lab4_cam_SOURCE_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam)
-  set(lab4_cam_DEVEL_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel)
+  set(lab4_cam_SOURCE_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam)
+  set(lab4_cam_DEVEL_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel)
   set(lab4_cam_INSTALL_PREFIX "")
   set(lab4_cam_PREFIX ${lab4_cam_DEVEL_PREFIX})
 else()
   set(lab4_cam_SOURCE_PREFIX "")
   set(lab4_cam_DEVEL_PREFIX "")
-  set(lab4_cam_INSTALL_PREFIX /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/install)
+  set(lab4_cam_INSTALL_PREFIX /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/install)
   set(lab4_cam_PREFIX ${lab4_cam_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(lab4_cam_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/include " STREQUAL " ")
+if(NOT "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/include " STREQUAL " ")
   set(lab4_cam_INCLUDE_DIRS "")
-  set(_include_dirs "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/include")
+  set(_include_dirs "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/in
         message(FATAL_ERROR "Project 'lab4_cam' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'lab4_cam' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'lab4_cam' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam/${idir}'.  ${_report}")
     endif()
     _list_append_unique(lab4_cam_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib;/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
 messages_str = ""
-services_str = "/home/cc/ee106a/fa22/class/ee106a-adf/ros_workspaces/206project/src/lab4_cam/srv/ImageSrv.srv"
+services_str = "/home/cc/ee106a/fa22/class/ee106a-agw/ros_workspaces/project/206project/src/lab4_cam/srv/ImageSrv.srv"
 pkg_name = "lab4_cam"
 dependencies_str = "sensor_msgs"
 langs = "gencpp;geneus;genlisp;gennodejs;genpy"

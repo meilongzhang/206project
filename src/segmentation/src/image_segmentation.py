@@ -313,11 +313,24 @@ def kmeans_cluster(image):
     segmented_image = segmented_data.reshape((image.shape)) # reshape data into the original image dimensions
     return segmented_image, centers
 
-def mask_red(image):
+def mask_red_lower(image):
     # Convert BGR to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # define range of red color in HSV
-    lower_red = np.array([150,75,75])
+    lower_red = np.array([0,50,50])
+    upper_red = np.array([10,255,255])
+    # Threshold the HSV image to get only red colors
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(image,image, mask= mask)
+    return mask
+
+
+def mask_red_upper(image):
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # define range of red color in HSV
+    lower_red = np.array([170,50,50])
     upper_red = np.array([180,255,255])
     # Threshold the HSV image to get only red colors
     mask = cv2.inRange(hsv, lower_red, upper_red)
@@ -397,18 +410,32 @@ def main():
         #cv2.imshow("image", image)
         #cv2.waitKey()
 
-    image = image[50:350, 50:350]
+    image = image[0:500, 100:500]
     im = image.copy()
     ima = image.copy()
     
-    mask = mask_red(im)
+    mask = mask_red_lower(im)
     ima, waypoints = drawCenters(ima, mask, 'red')
+
+    mask = mask_red_upper(im)
+    ima, waypoints2 = drawCenters(ima, mask, 'red')
+
+    waypoints = waypoints + waypoints2
+
     mask = mask_blue(im)
     ima, corners = drawCenters(ima, mask, 'blue')
     
     
     message = String()
-    message.data = str(corners) + " + " + str(waypoints)
+    cs = []
+    ws = []
+
+    for c in corners:
+        cs.append((c[1], c[0]))
+
+    for w in waypoints:
+        ws.append((w[1], w[0]))
+    message.data = str(cs) + " + " + str(ws)
 
     cv2.imshow("", ima)
     cv2.waitKey(0)

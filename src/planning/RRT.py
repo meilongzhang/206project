@@ -34,21 +34,22 @@ def main(type):
     
     for corner in corners:
         if corner[0] > maxX:
-            maxY = corner[0]
-            maxX = corner[1]
+            maxX = corner[0]
+            maxY = corner[1]
 
     for corner in corners:
         if corner[0] == maxX:
             pass
         else:
-            goalY = corner[0]
-            goalX = corner[1]
+            goalX = corner[0]
+            goalY = corner[1]
     
 
-    print(corners[0])
+    print(maxX, maxY)
     dimensions=(maxX, maxY)
+    #print("ratio:", 0.762 / maxY)
     start=(0,0)
-    goal=(goalX,goalY)
+    goal=(goalY,goalX)
     obsdim=30
     obsnum=len(obstacles)
     iteration = 0
@@ -59,7 +60,7 @@ def main(type):
     graph=RRTGraph(start,goal,dimensions,obsdim,obsnum,radius)
 
     #obstacles=graph.makeobs()
-    obstacles = [(o[0] - obsdim/2, o[1] - obsdim/2) for o in obstacles]
+    obstacles = [(o[1] - obsdim/2, o[0] - obsdim/2) for o in obstacles]
     obstacles = graph.convertobs(obstacles)
     map.drawMap(obstacles)
 
@@ -116,12 +117,16 @@ def callback(data):
         b = iter(obstacles)
         corners = [(x, y) for x, y in zip(a, a)]
         obstacles = [(x, y) for x, y in zip(b, b)]
+        print("corners:", corners)
+        print("obstacles:", obstacles)
         moveToZero(corners, obstacles)
 
 def moveToZero(c, o):
     global corners
     global obstacles
     global layoutFound
+
+    
     corners = []
     obstacles = []
     minX = float("inf")
@@ -132,7 +137,7 @@ def moveToZero(c, o):
             minY = corner[1]
 
     for corner in c:
-        if corner[0] - minX == 0:
+        if corner[0] == minX:
             pass
         else:
             corners.append((corner[0] - minX, corner[1] - minY))
@@ -141,6 +146,10 @@ def moveToZero(c, o):
         obstacles.append((obstacle[0] - minX, obstacle[1] - minY))
 
     layoutFound = True
+    print("corners:", corners)
+    print("obstacles:", obstacles)
+
+
 
 if __name__ == '__main__':
     """

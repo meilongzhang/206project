@@ -57,14 +57,16 @@ def controller():
   
   while True:
     try:
-      goalY, goalX = goals.pop(0)
+      goalX, goalY = goals.pop(0)
       break
     except:
       pass
+  
   # finishedRotation = False
   aligned = False
   oriented = False
   arrived = False
+  pointNumber = 0
   # Loop until the node is killed with Ctrl-C
   while not rospy.is_shutdown():
     try:
@@ -78,9 +80,10 @@ def controller():
       curY = trans.transform.translation.y
       diffX = goalX - curX
       diffY = goalY - curY
-      print("goal X: ", goalX, " goal Y: ", goalY)
+      print("waypoint number:", pointNumber,"goal X: ", goalX, " goal Y: ", goalY)
       print("current X: ", curX, " current Y: ", curY)
       # ALIGNING STEP
+      """
       if not aligned:
         targetYaw = 0
         yawDiff = abs(yaw - targetYaw)
@@ -93,9 +96,9 @@ def controller():
         if yawDiff < 0.1:
           print("Aligning Step Done")
           aligned = True
-
+      """
       # ORIENTATION STEP
-      elif not oriented:
+      if not oriented:
         targetYaw = mt.atan2(diffY, diffX)
         yawDiff = abs(yaw - targetYaw)
         if yawDiff >= 0.05:
@@ -126,8 +129,12 @@ def controller():
         oriented = False
         aligned = False
         print("Arrived at checkpoint, moving onto next")
+        pointNumber += 1
         if len(goals) != 0:
           goalX, goalY = goals.pop(0)
+        else:
+          print("Arrived at end.")
+          break
       
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       pass
@@ -143,7 +150,7 @@ def callback(data):
     strNumbers = data.data[1:-1].replace('(', '').replace(')', '').split(', ')
     nums = [int(x) for x in strNumbers][2:]
     a = iter(nums)
-    goals = [(x/150, y/150) for x, y in zip(a, a)] # change this factor
+    goals = [(y * 0.0045, x * 0.0045) for x, y in zip(a, a)] # change this factor
     print("set goals")
     pathFound = True
   
