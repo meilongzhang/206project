@@ -7,18 +7,18 @@ from numpy.linalg import norm
 from numpy.random import randn
 import scipy.stats
 
-import rospy
-import tf2_ros
-import tf
+# import rospy
+# import tf2_ros
+# import tf
 
-from sensor_msgs.msg import LaserScan
-from visualization_msgs.msg import Marker
-from geometry_msgs.msg import Point
-from std_msgs.msg import ColorRGBA
+# from sensor_msgs.msg import LaserScan
+# from visualization_msgs.msg import Marker
+# from geometry_msgs.msg import Point
+# from std_msgs.msg import ColorRGBA
 
 import numpy as np
 #create uniform gaussian particles 
-def create_uniform_particles(x_range, y_range, hdg_range, N):
+def particle_creation(x_range, y_range, hdg_range, N):
     particles = np.empty((N, 3))
     particles[:, 0] = uniform(x_range[0], x_range[1], size=N)
     particles[:, 1] = uniform(y_range[0], y_range[1], size=N)
@@ -34,7 +34,7 @@ def create_gaussian_particles(mean, std, N):
     particles[:, 2] %= 2 * np.pi
     return particles
     
-def predict(particles, u, std, dt=1.):
+def predict_turtle(particles, u, std, dt=1.):
     """ move according to control input u (heading change, velocity)
     with noise Q (std heading change, std velocity)`"""
 
@@ -48,7 +48,7 @@ def predict(particles, u, std, dt=1.):
     particles[:, 0] += np.cos(particles[:, 2]) * dist
     particles[:, 1] += np.sin(particles[:, 2]) * dist
 
-def update(particles, weights, z, R, landmarks):
+def update_turtle(particles, weights, z, R, landmarks):
     for i, landmark in enumerate(landmarks):
         distance = np.linalg.norm(particles[:, 0:2] - landmark, axis=1)
         weights *= scipy.stats.norm(distance, R).pdf(z[i])
@@ -56,7 +56,7 @@ def update(particles, weights, z, R, landmarks):
     weights += 1.e-300      # avoid round-off to zero
     weights /= sum(weights) # normalize
 
-def estimate(particles, weights):
+def turtle_estimate(particles, weights):
     """returns mean and variance of the weighted particles"""
 
     pos = particles[:, 0:2]
@@ -86,7 +86,7 @@ self._sensor_frame = rospy.get_param("~frames/sensor")
 # self._sensor_frame = rospy.get_param("base_link")
 self._fixed_frame = rospy.get_param("~frames/fixed")
 ###
-def run_pf1(N, iters=18, sensor_std_err=.1, 
+def turtlebot_particle(N, iters=18, sensor_std_err=.1, 
             do_plot=True, plot_particles=False,
             xlim=(0, 20), ylim=(0, 20),
             initial_x=None):
@@ -101,7 +101,7 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
         particles = create_gaussian_particles(
             mean=initial_x, std=(5, 5, np.pi/4), N=N)
     else:
-        particles = create_uniform_particles((0,20), (0,20), (0, 6.28), N)
+        particles = particle_creation((0,20), (0,20), (0, 6.28), N)
     weights = np.ones(N) / N
 
     if plot_particles:
@@ -127,10 +127,10 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
               (randn(NL) * sensor_std_err))
 
         # move diagonally forward to (x+1, x+1)
-        predict(particles, u=(0.00, 1.414), std=(.2, .05))
+        predict_turtle(particles, u=(0.00, 1.414), std=(.2, .05))
         
         # incorporate measurements
-        update(particles, weights, z=zs, R=sensor_std_err, 
+        update_turtle(particles, weights, z=zs, R=sensor_std_err, 
                landmarks=landmarks)
         
         # resample if too few effective particles
@@ -138,7 +138,7 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
             indexes = systematic_resample(weights)
             resample_from_index(particles, weights, indexes)
             assert np.allclose(weights, 1/N)
-        mu, var = estimate(particles, weights)
+        mu, var = turtle_estimate(particles, weights)
         xs.append(mu)
 
         if plot_particles:
@@ -160,5 +160,5 @@ from numpy.random import seed
 # seed(2) 
 # run_pf1(N=5000, plot_particles=False)
 seed(2)
-run_pf1(N=5000, iters=8, plot_particles=True, 
+turtlebot_particle(N=5000, iters=8, plot_particles=True, 
         xlim=(0,8), ylim=(0,8))
